@@ -1,6 +1,6 @@
 NAME = philo
 
-SRCS = $(wildcard *.c)
+SRCS = main.c helpers.c initial_state.c philo_actions.c philo_program.c time_functions.c
 
 CC = cc -g
 

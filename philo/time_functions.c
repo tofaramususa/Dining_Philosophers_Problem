@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   time_functions.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tmususa <tmususa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 01:51:27 by tmususa           #+#    #+#             */
-/*   Updated: 2023/07/02 21:07:40 by marvin           ###   ########.fr       */
+/*   Updated: 2023/07/09 14:56:02 by tmususa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,19 +45,28 @@ void	ft_delay(t_philo *philo, int waiting_time)
 			break ;
 		}
 		pthread_mutex_unlock(&philo->shared_info->lock);
-		usleep (100);
+		usleep (200);
 	}
 }
 
 void	philo_logs(t_philo *philo, char *message)
 {
+	bool	done;
+
+	done = false;
 	pthread_mutex_lock(&philo->shared_info->lock);
-	if (!philo->shared_info->finish)
+	if (philo->shared_info->finish == true)
 	{
-		printf("%lld\t | %d\t : %s\n", time_from_start(philo->shared_info),
-			philo->id_number, message);
+		done = true;
 		pthread_mutex_unlock(&philo->shared_info->lock);
 	}
 	else
 		pthread_mutex_unlock(&philo->shared_info->lock);
+	if (done == false)
+	{
+		pthread_mutex_lock(&philo->shared_info->lock);
+		printf("%lld\t | %d\t : %s\n", time_from_start(philo->shared_info),
+			philo->id_number, message);
+		pthread_mutex_unlock(&philo->shared_info->lock);
+	}
 }

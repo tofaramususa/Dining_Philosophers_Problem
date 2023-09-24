@@ -3,55 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   philo_actions.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tmususa <tmususa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/02 21:20:45 by tmususa           #+#    #+#             */
-/*   Updated: 2023/07/02 21:42:36 by marvin           ###   ########.fr       */
+/*   Updated: 2023/07/16 18:26:58 by tmususa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	eating(t_philo *philo)
-{
-	pthread_mutex_lock(&philo->shared_info->lock);
-	if (!philo->shared_info->finish)
-	{
-		pthread_mutex_unlock(&philo->shared_info->lock);
-		take_forks(philo);
-		philo_logs(philo, EATING);
-		pthread_mutex_lock(&philo->shared_info->lock);
-		philo->last_meal = time_from_start(philo->shared_info);
-		philo->nbr_of_meals++;
-		pthread_mutex_unlock(&philo->shared_info->lock);
-		ft_delay(philo, philo->shared_info->time_to_eat);
-		if (philo->holding_fork == true)
-		{
-			pthread_mutex_unlock(&philo->shared_info->fork[philo->left_fork]);
-			pthread_mutex_unlock(&philo->shared_info->fork[philo->right_fork]);
-			philo->holding_fork = false;
-		}
-	}
-	else
-		pthread_mutex_unlock(&philo->shared_info->lock);
-}
-
-void	sleeping(t_philo *philo)
-{
-	if (!philo->shared_info->finish)
-	{
-		philo_logs(philo, SLEEPING);
-		ft_delay(philo, philo->shared_info->time_to_eat);
-	}
-}
-
-void	thinking(t_philo *philo)
-{
-	if (!philo->shared_info->finish)
-	{
-		philo_logs(philo, THINKING);
-	}
-}
 
 void	take_forks(t_philo *philo)
 {
@@ -60,18 +19,42 @@ void	take_forks(t_philo *philo)
 		usleep(1500);
 		pthread_mutex_lock(&philo->shared_info->fork[philo->left_fork]);
 		pthread_mutex_lock(&philo->shared_info->fork[philo->right_fork]);
-		philo_logs(philo, FORK_TAKEN);
-		philo_logs(philo, FORK_TAKEN);
+		print_fork(philo);
 		philo->holding_fork = true;
 	}
-	else if (!philo->id_number % 2)
+	else
 	{
 		pthread_mutex_lock(&philo->shared_info->fork[philo->right_fork]);
 		pthread_mutex_lock(&philo->shared_info->fork[philo->left_fork]);
-		philo_logs(philo, FORK_TAKEN);
-		philo_logs(philo, FORK_TAKEN);
+		print_fork(philo);
 		philo->holding_fork = true;
 	}
+}
+
+void	eating(t_philo *philo)
+{
+	take_forks(philo);
+	philo_logs(philo, EATING);
+	pthread_mutex_lock(&philo->shared_info->lock);
+	philo->last_meal = time_from_start(philo->shared_info);
+	philo->nbr_of_meals++;
+	pthread_mutex_unlock(&philo->shared_info->lock);
+	ft_delay(philo, philo->shared_info->time_to_eat);
+	if (philo->holding_fork == true)
+	{
+		philo->holding_fork = false;
+		pthread_mutex_unlock(&philo->shared_info->fork[philo->left_fork]);
+		pthread_mutex_unlock(&philo->shared_info->fork[philo->right_fork]);
+	}
+	philo_logs(philo, SLEEPING);
+	ft_delay(philo, philo->shared_info->time_to_sleep);
+	philo_logs(philo, THINKING);
+}
+
+void	print_fork(t_philo *philo)
+{
+	philo_logs(philo, FORK_TAKEN);
+	philo_logs(philo, FORK_TAKEN);
 }
 
 void	*single_philo(void *param)

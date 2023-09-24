@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tmususa <tmususa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 12:22:03 by tmususa           #+#    #+#             */
-/*   Updated: 2023/07/02 21:20:48 by marvin           ###   ########.fr       */
+/*   Updated: 2023/07/09 17:54:37 by tmususa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef struct s_data
 	int				meal_nbr;
 	int				nbr_of_philo;
 	bool			finish;
+	bool			print;
 	long long		time_to_die;
 	long long		time_to_eat;
 	long long		time_to_sleep;
@@ -73,16 +74,16 @@ void		init_philo(t_data *info);
 void		program_start(t_data *info);
 void		*philo_start(void *param);
 void		program_status(t_data *info);
-void		each_philo_eat(t_data *info);
+bool		each_philo_eat(t_data *info);
 void		check_death(t_philo *philo);
 void		eating(t_philo *philo);
-void		sleeping(t_philo *philo);
-void		thinking(t_philo *philo);
 void		take_forks(t_philo *philo);
 void		init(char **argv, t_data *info);
 void		init_philo(t_data *info);
 void		philo_logs(t_philo *philo, char *message);
 void		ft_delay(t_philo *philo, int waiting_time);
 void		*single_philo(void *param);
+void		print_fork(t_philo *philo);
+void		set_true(t_philo *philo);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initial_state.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tmususa <tmususa@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 12:02:17 by tmususa           #+#    #+#             */
-/*   Updated: 2023/07/02 20:51:20 by marvin           ###   ########.fr       */
+/*   Updated: 2023/07/08 18:06:39 by tmususa          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	init(char **argv, t_data *info)
 	else
 		info->meal_nbr = -1;
 	info->finish = false;
+	info->print = false;
 	info->philo = ft_calloc(info->nbr_of_philo, (sizeof(t_philo)));
 	info->fork = ft_calloc(info->nbr_of_philo, (sizeof(pthread_mutex_t)));
 	pthread_mutex_init(&info->lock, NULL);
